@@ -1,0 +1,19 @@
+{
+  "name": "lab-01",
+  "version": "1.0.0",
+  "description": "cs-554-lab-01",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js & newman run CS-554-Lab-01.postman_collection.json",
+    "start": "node app.js"
+  },
+  "author": "Zubair Shaikh 10444383",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.5.2",
+    "newman": "^4.5.7",
+    "underscore": "^1.9.2",
+    "uuid-mongodb": "^2.1.2"
+  }
+}
