@@ -112,3 +112,17 @@ You may name the collection however you would like.
 ## Notes
 
 1. Remember to submit your `package.json` file but **not** your `node_modules` folder.
+
+## Steps to Run
+
+### Restore Database
+
+`mongorestore -d shaikh-zubair-cs554-lab01 db/shaikh-zubair-cs554-lab01`
+
+### Test
+
+`npm test`
+
+### Run
+
+`npm start`
