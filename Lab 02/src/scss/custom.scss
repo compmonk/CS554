@@ -1,0 +1,91 @@
+@import "variables";
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap-grid";
+
+body,
+html {
+  background: $body-background;
+  color: darken($brand-primary, 20%);
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  font-size: $primary-font-size;
+  background-clip: border-box;
+}
+
+.card {
+  margin-top: 10px !important;
+  margin-outside: 1px;
+  padding: 2.5px;
+}
+
+.card-body {
+  background-color: $card-colour;
+  color: $text-colour;
+}
+
+.btn-primary {
+  background-color: $button-background;
+  color: $button-text;
+  border-color: $body-background;
+}
+
+
+
+// following code is from
+// https://www.w3schools.com/howto/howto_css_sidebar_responsive.asp
+
+/* The side navigation menu */
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: $card-colour;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+/* Sidebar links */
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+/* Active/current link */
+.sidebar a.active {
+  background-color: $body-background;
+  color: $text-colour;
+}
+
+/* Links on mouse-over */
+.sidebar a:hover:not(.active) {
+  background-color: $text-colour;
+  color: $card-colour;
+}
+
+/* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+/* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
