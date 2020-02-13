@@ -57,7 +57,7 @@ It was not discussed in the lecture as to what package would be involved or how 
 
 ### Install Dependencies
 
-`npm isntall`
+`npm install`
 
 ### Build SASS and Vendor Bundles
 
