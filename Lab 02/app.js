@@ -10,7 +10,7 @@ app.get('/', function (request, response) {
 });
 
 app.use("*", (request, response) => {
-    response.status(404).json({error: "Route not found"});
+    response.status(404).sendFile(path.resolve("public/html/404.html"));
 });
 
 const port = 3000;
