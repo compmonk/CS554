@@ -3,3 +3,10 @@
 
 /node_modules/
 /package-lock.json
+/.idea/.gitignore
+/.idea/CS554.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/*/*.zip
+/.idea/vcs.xml
+/.idea/watcherTasks.xml
