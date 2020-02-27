@@ -2683,6 +2683,44 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get invalid route",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7eda1ed6-988e-48f2-8377-3710373676e8",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Body is correct\", function () {",
+							"    pm.response.to.have.body(",
+							"        {",
+							"            \"error\": \"route not found\"",
+							"        }",
+							"    );",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

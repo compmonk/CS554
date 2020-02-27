@@ -40,6 +40,10 @@ app.get('/api/people/:id', async function (request, response) {
     }
 });
 
+app.use("*", (request, response) => {
+    response.status(404).json({"error": "route not found"});
+});
+
 const port = 3000;
 
 app.listen(port, () => {
