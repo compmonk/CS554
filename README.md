@@ -5,3 +5,5 @@
 ### [Lab 02 : Compiling SASS and Bootstrap](https://github.com/compmonk/CS554/tree/master/Lab%2002)
 
 ### [Lab 03 : Redis](https://github.com/compmonk/CS554/tree/master/Lab%2003)
+
+### [Lab 04 : Choosing Technical Stacks](https://github.com/compmonk/CS554/tree/master/Lab%2004)
