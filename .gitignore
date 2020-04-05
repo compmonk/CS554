@@ -10,3 +10,6 @@
 /*/*.zip
 /.idea/vcs.xml
 /.idea/watcherTasks.xml
+/*/*.pdf
+/*/yarn.lock
+/*/yarn-error.log
