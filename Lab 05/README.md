@@ -12,7 +12,7 @@ You will be using the [Pokeapi](https://pokeapi.co/docs/v2.html). You will use t
 
 ### /
 
-The root directory of your application will be a simple page explaining the purpose of your site (to talk about Pokemon, Berries, and Machines). You should also explain what each of these things are, as if this was a little tutorial in Pokemon. Think of this app as your first steps through Palette Town.
+The root directory of your application will be a simple page explaining the purpose of your site (to talk about Pokemon, Berries, and MachineContainer). You should also explain what each of these things are, as if this was a little tutorial in Pokemon. Think of this app as your first steps through Palette Town.
 
 This page will have a `<Link>` to the Pokemon Listing (`/pokemon/page/0`), The Berry Listing (`/berries/page/0`), and the Machine Listing (`/machines/page/0`)
 
@@ -49,13 +49,13 @@ Pagination can be done using an external library from NPM, such as [react-bootst
 The minimum you must provide for a pagination UI:
 
 * **If you are on page 0, you will show a button to go to the _next_ page.**
-* **If you are on page 1+, you will show a _next_ button and a _previous_ button, that will take you to the previous page.*
+* **If you are on page 1+, you will show a _next_ button and a _previous_ button, that will take you to the previous page.**
 
 ## HTML, Look, and Content
 
 Besides the specified settings, as long as your HTML is valid and your page runs passes a [tota11y](http://khan.github.io/tota11y/) test, the general look and feel is up to you. If you want to update it, you may; if you do not, that is fine.
 
-I do, however, recommend using [React-Bootstrap](https://react-bootstrap.github.io/getting-started/introduction/)to make your life easier if you need any UI elements.
+I do, however, recommend using [React-Bootstrap](https://react-bootstrap.github.io/getting-started/introduction/) to make your life easier if you need any UI elements.
 
 ## General Requirements
 
@@ -63,3 +63,13 @@ I do, however, recommend using [React-Bootstrap](https://react-bootstrap.github.
 2. Remember to run HTML Validator and tota11y tests!
 3. Remember to have fun with the content.
 4. Remember to practice usage of async / await!
+
+## Steps to Run
+
+### Test
+
+`npm test`
+
+### Run
+
+`npm start`
