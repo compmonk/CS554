@@ -9,3 +9,5 @@
 ### [Lab 04 : Choosing Technical Stacks](https://github.com/compmonk/CS554/tree/master/Lab%2004)
 
 ### [Lab 05 : React Pokedex](https://github.com/compmonk/CS554/tree/master/Lab%2005)
+
+### [Lab 06 : Lab 01 Revisited...](https://github.com/compmonk/CS554/tree/master/Lab%2006)

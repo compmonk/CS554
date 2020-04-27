@@ -1,0 +1,5308 @@
+{
+	"info": {
+		"_postman_id": "1a939a21-b39a-43dd-9955-e5b28358af4c",
+		"name": "CS-554-Lab-06",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST\t/api/tasks",
+			"item": [
+				{
+					"name": "Create Task",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5feeb2d7-efe9-4c2e-9941-5eb5fd5eae3e",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8b5eee9-6410-41d6-ab6a-29575280ab0a",
+								"exec": [
+									"pm.globals.set(\"taskId\", pm.response.json()['_id']);",
+									"",
+									"",
+									"var task = JSON.parse(pm.globals.get(\"task\"));",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Create Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Created Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create a Task"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task without `title`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5b589fcf-c851-4ce6-868e-4e5625f041fb",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a50fb2d-6d1e-4db9-b8bd-6bd930ba7c9d",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"title\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task without `title`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task with invalid data type for `title`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b95d486f-3761-432a-922a-29d77ad4220d",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": 1,",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a23b5b8-9655-4ed9-b6f7-0670866704df",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"title\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task with invalid data type for `title`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task without `description`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cb75ecb7-7ada-43d1-b6f9-ba2195194dd3",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "04a39254-7dcc-4d2c-90bc-652cdc87639c",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"description\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task without `description`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task with invalid data type for `description`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7d7c2ce1-8c8b-4148-bda9-d4d263d38755",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": 1,",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "23393439-d149-4f86-a444-36f127753bbf",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"description\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task with invalid data type for `description`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task without `hoursEstimated`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f6568f39-67d4-4302-8ad4-6cfefacf88f9",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "05c1ee63-5f1d-42a6-b1f8-7e127358025a",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"hoursEstimated\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task without `hoursEstimated`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task with invalid data type for `hoursEstimated`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0237d1a5-4993-49fa-a7fb-193935ffc313",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": true,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1981f74e-7212-4a52-8cbf-2b78298814ea",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"hoursEstimated\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task with invalid data type for `hoursEstimated`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task without `completed`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3d180689-7e04-45b4-86c0-26dc18ab89c2",
+								"exec": [
+									"pm.globals.set(\"task2\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa694484-da4b-4e97-b08c-db1e66d9d575",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task2\"));",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Create Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(false);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Created Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task2}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task without `completed`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task with invalid data type for `completed`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9c1ddda2-e2da-4042-91f7-9a567a1d3d22",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": 1,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5f739ac7-31da-4b54-b890-652f3a75fc88",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"completed\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task with invalid data type for `completed`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task without `comments`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4b952d68-8dc8-497a-ae8d-52d17e7c7fb1",
+								"exec": [
+									"pm.globals.set(\"task2\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "f0b33790-175b-4423-8e66-7766b0136489",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task2\"));",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Create Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Created Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task2}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task without `comments`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task with invalid data type for `comments`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0bf61f95-5a21-4abd-9134-419a5003025c",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": 1",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b462d77d-cfc6-4ee6-88a3-d80982b08ebd",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"comments\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task with invalid data type for `comments`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task without `comments.name`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "72dbe738-e275-47bf-9cd4-08945f8d2b14",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "90f3f12d-d742-4117-978e-e496a8515b97",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"comments.name\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task without `comments.name`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task with invalid data type for `comments.name`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4546153c-c122-46f7-b423-b1405f2fb9c4",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": 1,",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "9483b5ba-6c37-425f-8ee6-977fc48aba66",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"comments.name\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task with invalid data type for `comments.name`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task without `comments.comment`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c1636b6c-ffe0-410f-b17e-22d227069173",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a856ab2-79db-482c-8fe5-3b7016f17ad0",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"comments.comment\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task without `comments.comment`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task with invalid data type for `comments.comment`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5ee94893-f793-475c-876b-0d18a12bbd72",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": 1",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6a476c0d-2bda-4c81-8aa7-63ac2fa1a0ae",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"comments.comment\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task with invalid data type for `comments.comment`"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task with empty body",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "abd6af1c-046f-4615-8b24-7e494ce4e14c",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ead229e0-27d8-47c8-bdc7-783aab4b1926",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body contains error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors.task).to.eql(\"task object not defined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Create Task with empty body"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "GET\t/api/tasks/:id",
+			"item": [
+				{
+					"name": "Get Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d1a6ae6-de15-49eb-a41b-1435abb94c7b",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task\"));",
+									"",
+									"pm.test(\"Successful GET request\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct _id value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData._id).to.eql(pm.globals.get(\"taskId\"));",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Create Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Created Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ed9c6a29-d7cc-4d54-acc9-12e1284eb45e",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Get a Task by id"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task with invalid `taskId`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "00d248a0-262c-4867-ac82-da6da4b10083",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task\"));",
+									"",
+									"pm.test(\"Successful Bad request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify({",
+									"        \"errors\":{",
+									"            \"id\":\"Argument passed in must be a single String of 12 bytes or a string of 24 hex characters\"",
+									"        }",
+									"    }));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/XXXX",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"XXXX"
+							]
+						},
+						"description": "Get Task with invalid `taskId`"
+					},
+					"response": []
+				},
+				{
+					"name": "Get non-existent Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cd9e11ad-e977-4456-8add-0bd3ff6605b0",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task\"));",
+									"",
+									"pm.test(\"Successful Not Found request\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"id\": \"task with id fedcba987654321001234567 doesn't exists\"",
+									"                }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/fedcba987654321001234567",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"fedcba987654321001234567"
+							]
+						},
+						"description": "Get non-existent Task"
+					},
+					"response": []
+				}
+			],
+			"description": "GET\t/api/tasks/:id",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "GET /api/tasks",
+			"item": [
+				{
+					"name": "Get Tasks",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "6e93b60b-61ac-45ee-9720-8c5410edaedb",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dde23d6b-8f54-48c9-8c79-9f9681a41ab1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Get Tasks contains default number of tasks\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(20);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								""
+							]
+						},
+						"description": "Get Tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks with `take`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f9d12e9e-79e4-4052-a716-f6cee3e103c0",
+								"exec": [
+									"pm.globals.set(\"take\", 30);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1124094e-a689-4599-899c-fe44fae47265",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Get Tasks with `take` contains correct number of tasks\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(pm.globals.get(\"take\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks?take={{take}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "{{take}}"
+								}
+							]
+						},
+						"description": "Get list of Tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks with invalid datatype for `take`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b1430344-2794-4b2e-a98a-a01f4fc1f7c3",
+								"exec": [
+									"pm.globals.set(\"take\", true);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "9c33f3ca-260d-41b9-9faf-4ea185631c87",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"take\": \"take is NaN\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks?take={{take}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "{{take}}"
+								}
+							]
+						},
+						"description": "Get Tasks with invalid datatype for `take`"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks with `skip`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "605488fa-b2ba-494e-b9ae-33c65ddd4abb",
+								"exec": [
+									"pm.globals.set(\"skip\", 100);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "af8828ba-a08c-45e8-8c66-f8bb965bd309",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Get Tasks with `skip` contains correct number of tasks\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(20);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks?skip={{skip}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "skip",
+									"value": "{{skip}}"
+								}
+							]
+						},
+						"description": "Get Tasks with Skip"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks with invalid datatype for `skip`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "26ee2322-13ec-4de4-a528-744806d5c04d",
+								"exec": [
+									"pm.globals.set(\"skip\", true);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b4521bcf-8fea-4f77-9544-37c38e2f5fd6",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"skip\": \"skip is NaN\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks?skip={{skip}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "skip",
+									"value": "{{skip}}"
+								}
+							]
+						},
+						"description": "Get Tasks with invalid datatype for `skip`"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks with `take` more than 100",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a2bae520-e47c-4e7d-bf74-af302139d160",
+								"exec": [
+									"pm.globals.set(\"take\", 150);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f45771a-6b95-4083-a12d-a4b3b6c7000d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Get Tasks with `take` more than 100 contains correct number of tasks\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(100);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks?take={{take}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "{{take}}"
+								}
+							]
+						},
+						"description": "Get Tasks with Take more than 100"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks with `take` and `skip`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cb890534-5374-46cb-beda-dec3f72af6c2",
+								"exec": [
+									"pm.globals.set(\"take\", 30);",
+									"pm.globals.set(\"skip\", 100);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "f8824a63-d716-488a-a225-4ecc7a6f4f3b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Get Tasks with `take` and `skip` contains correct number of tasks\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(pm.globals.get(\"take\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks?take={{take}}&skip={{skip}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "{{take}}"
+								},
+								{
+									"key": "skip",
+									"value": "{{skip}}"
+								}
+							]
+						},
+						"description": "Get Tasks with Take and Skip"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks with 0 `take`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f9d12e9e-79e4-4052-a716-f6cee3e103c0",
+								"exec": [
+									"pm.globals.set(\"take\", 30);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1124094e-a689-4599-899c-fe44fae47265",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Get Tasks with `take` contains correct number of tasks\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length).to.eql(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks?take=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "GET\t/api/tasks",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PUT\t/api/tasks/:id",
+			"item": [
+				{
+					"name": "Update Task",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f3698b6a-1033-48a1-9fee-c3f8f18ab020",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify(",
+									"    {",
+									"        \"title\": \"Make lab modified\",",
+									"        \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified\",",
+									"        \"hoursEstimated\": 3,",
+									"        \"completed\": false,",
+									"        \"comments\": [",
+									"            {",
+									"                \"name\": \"Phil Baressi\",",
+									"                \"comment\": \"Considering lab about dinosaurs modified\"",
+									"                }",
+									"            ]",
+									"    }",
+									"));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "89af2ccc-4a04-4bf0-92c3-3088f71f30ea",
+								"exec": [
+									"var task = {",
+									"        \"title\": \"Make lab modified\",",
+									"        \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified\",",
+									"        \"hoursEstimated\": 3,",
+									"        \"completed\": false,",
+									"        \"comments\": [",
+									"            {",
+									"                \"name\": \"Phil\",",
+									"                \"comment\": \"Considering lab about dinosaurs\"",
+									"                }",
+									"            ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct title _id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData._id).to.eql(pm.globals.get(\"taskId\"));",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Updated Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update a Task"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task without `title`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "75ca42f1-b6b0-4f95-a60b-97385af075a3",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d0b14a11-7878-4b53-8581-83aa7fd1bf57",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"title\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task without `title`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with invalid data type for `title`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cc152ac3-859c-4fb3-9c38-1e6719303ad9",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": 1,",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b622b307-150f-42cf-8062-dd49488f7088",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"title\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task with invalid data type for `title`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task without `description`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "097625eb-5645-472d-95dd-2f31a770f7d2",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a6306e2c-62d1-48a5-8dc8-3a5783bce89f",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"description\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task without `description`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with invalid data type for `description`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9f63943a-c33d-4184-82bc-73637f04e40d",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": 1,",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0343a314-ea79-4f0f-9e74-402f59fd1cc9",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"description\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task with invalid data type for `description`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task without `hoursEstimated`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "027592ae-4e1f-45d8-892b-965689cdd3fb",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "bcea3b94-4bb2-42ef-90af-ec2fd49e8876",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"hoursEstimated\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task without `hoursEstimated`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with invalid data type for `hoursEstimated`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "01ec7f0c-deef-41ad-881f-b676c357ef65",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": true,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d8c06704-da08-45a8-b438-dd595a2c511f",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"hoursEstimated\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task with invalid data type for `hoursEstimated`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task without `completed`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4f2075b2-55d7-444d-b594-91d9e91bd62c",
+								"exec": [
+									"pm.globals.set(\"task2\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "73eeef58-0699-44fe-9534-a783c6a1e1a0",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"completed\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task2}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task without `completed`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with invalid data type for `completed`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "6ce1b0c5-c4a4-4382-89e2-daa505e13bfc",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab\",",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": 1,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f0ebac9-c78c-40f4-8694-76b5f9d0d893",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"completed\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task with invalid data type for `completed`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task without `comments`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b84bd28d-710a-40bc-adca-af8267598c49",
+								"exec": [
+									"pm.globals.set(\"task2\", JSON.stringify({",
+									"    \"title\": \"Make lab modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified\",",
+									"    \"hoursEstimated\": 4,",
+									"    \"completed\": true,",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "aefb04be-cd64-40da-b8c0-a8ce752dc663",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified\",",
+									"    \"hoursEstimated\": 4,",
+									"    \"completed\": true,",
+									"        \"comments\": [",
+									"            {",
+									"                \"name\": \"Phil\",",
+									"                \"comment\": \"Considering lab about dinosaurs\"",
+									"                }",
+									"            ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task2}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task without `comments`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with invalid data type for `comments`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "15fec4dd-29d7-4038-882c-8ffea2b85857",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"    \"title\": \"Make lab modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified\",",
+									"    \"hoursEstimated\": 5,",
+									"    \"completed\": false,",
+									"\t\"comments\": 1",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5a655ff7-d02d-4104-ba30-9231ea85c5dd",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified\",",
+									"    \"hoursEstimated\": 5,",
+									"    \"completed\": false,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task with invalid data type for `comments`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task without `comments.name`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "38f086ab-f61d-4e92-9e99-9a66c234222b",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"    \"title\": \"Make lab modified modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified\",",
+									"    \"hoursEstimated\": 6,",
+									"    \"completed\": true,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs modified\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "500c62e3-bdcb-4dc9-9987-1fabc711544b",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab modified modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified\",",
+									"    \"hoursEstimated\": 6,",
+									"    \"completed\": true,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task without `comments.name` Copy"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with invalid data type for `comments.name`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "55ae503a-c3da-4ff8-9908-d47feaf818a6",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": \"Make lab modified modified modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified modified\",",
+									"    \"hoursEstimated\": 7,",
+									"    \"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": 1,",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ab753aec-844d-4270-9d57-c0d0f25393d4",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab modified modified modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified modified\",",
+									"    \"hoursEstimated\": 7,",
+									"    \"completed\": false,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task with invalid data type for `comments.name`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task without `comments.comment`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c64bca7d-c27d-466e-b732-83e3e1ab0a57",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"    \"title\": \"Make lab modified modified modified modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified modified modified\",",
+									"    \"hoursEstimated\": 8,",
+									"    \"completed\": true,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil Baressi\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "13d2314f-d9a6-41e5-a5f4-5af6fff43ff0",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab modified modified modified modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified modified modified\",",
+									"    \"hoursEstimated\": 8,",
+									"    \"completed\": true,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task without `comments.comment`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with invalid data type for `comments.comment`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0390773c-92b8-4465-9a4a-a845b145bf72",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"    \"title\": \"Make lab modified modified modified modified modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified modified modified modified\",",
+									"    \"hoursEstimated\": 9,",
+									"    \"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": 1",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "690df6d5-99c3-4ad4-81e9-93b18dcf705b",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab modified modified modified modified modified modified modified\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified modified modified modified\",",
+									"    \"hoursEstimated\": 9,",
+									"    \"completed\": false,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Updated Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task with invalid data type for `comments.comment`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with empty body",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0c38ccfe-c7da-4cc4-8e37-ff5418f14e2a",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7c8073c6-bb8d-460a-a662-5a173612c0b8",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body contains error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors.task).to.eql(\"task object not defined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Update Task with empty body"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task with invalid `taskId`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4509a9e2-d0b2-4c64-bef8-8a5447bdfecf",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task\"));",
+									"",
+									"pm.test(\"Successful Bad request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify({",
+									"        \"errors\":{",
+									"            \"id\":\"Argument passed in must be a single String of 12 bytes or a string of 24 hex characters\"",
+									"        }",
+									"    }));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2e89d47b-b6ab-449a-83a4-3a57b4e6ed54",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify(",
+									"    {",
+									"        \"title\": \"Make lab modified\",",
+									"        \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified\",",
+									"        \"hoursEstimated\": 3,",
+									"        \"completed\": false,",
+									"        \"comments\": [",
+									"            {",
+									"                \"name\": \"Phil Baressi\",",
+									"                \"comment\": \"Considering lab about dinosaurs modified\"",
+									"                }",
+									"            ]",
+									"    }",
+									"));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/XXXX",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"XXXX"
+							]
+						},
+						"description": "Get Task with invalid `taskId`"
+					},
+					"response": []
+				},
+				{
+					"name": "Update non-existent Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d08e5c27-90dc-479c-a174-5ba277ce0ab7",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task\"));",
+									"",
+									"pm.test(\"Successful Not Found request\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"id\": \"task with id fedcba987654321001234567 doesn't exists\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d2dee62b-d957-43a8-bbad-8c2973f403f4",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify(",
+									"    {",
+									"        \"title\": \"Make lab modified\",",
+									"        \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified\",",
+									"        \"hoursEstimated\": 3,",
+									"        \"completed\": false,",
+									"        \"comments\": [",
+									"            {",
+									"                \"name\": \"Phil Baressi\",",
+									"                \"comment\": \"Considering lab about dinosaurs modified\"",
+									"                }",
+									"            ]",
+									"    }",
+									"));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/fedcba987654321001234567",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"fedcba987654321001234567"
+							]
+						},
+						"description": "Update non-existent Task"
+					},
+					"response": []
+				}
+			],
+			"description": "PUT\t/api/tasks/:id",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PATCH /api/tasks/:id",
+			"item": [
+				{
+					"name": "Patch Task `title`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f497c0c8-f8fd-487b-a877-8f6088c084fa",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified modified modified modified modified modified modified\",",
+									"    \"hoursEstimated\": 9,",
+									"    \"completed\": false,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Make lab\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task `title`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task with invalid data type for `title`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "73ad36ca-9368-484c-8518-d3f849ecfd99",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"\t\"title\": 1,",
+									"\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something\",",
+									"\t\"hoursEstimated\": 1,",
+									"\t\"completed\": false,",
+									"\t\"comments\": [",
+									"\t\t{",
+									"\t\t\t\"name\": \"Phil\",",
+									"\t\t\t\"comment\": \"Considering lab about dinosaurs\"",
+									"\t\t}",
+									"\t]",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6055d45b-c06a-4ec3-8f7e-deb32f8f3bac",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"title\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task with invalid data type for `title`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task `description`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d933c863-e776-4264-bc3d-2f2f06741eca",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it\",",
+									"    \"hoursEstimated\": 9,",
+									"    \"completed\": false,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task `description`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task with invalid data type for `description`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "353b384b-4aa0-4880-b96f-7c6b67237174",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1b5d4bb3-c6eb-4119-b625-ff15a79f1193",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"description\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task with invalid data type for `description`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task `hoursEstimated`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9419cff1-2d6e-4ac0-87d2-1a5d9c375108",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it\",",
+									"    \"hoursEstimated\": 10,",
+									"    \"completed\": false,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"hoursEstimated\": 10\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task `hoursEstimated`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task with invalid data type for `hourseEstimated`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7705c504-e498-4da2-bcf8-42fa76e7c93b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "9b20c92d-bc3d-47e1-89b6-c377977950f1",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"hoursEstimated\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"hoursEstimated\": true\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task with invalid data type for `hourseEstimated`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task `completed`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "77982d82-5423-459f-b099-b8bd5c246338",
+								"exec": [
+									"var task = {",
+									"    \"title\": \"Make lab\",",
+									"    \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it\",",
+									"    \"hoursEstimated\": 10,",
+									"    \"completed\": true,",
+									"    \"comments\": [",
+									"        {",
+									"            \"name\": \"Phil\",",
+									"            \"comment\": \"Considering lab about dinosaurs\"",
+									"            }",
+									"        ]",
+									"    }",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct title value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.title).to.eql(task.title);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct description value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.description).to.eql(task.description);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct hoursEstimated value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.hoursEstimated).to.eql(task.hoursEstimated);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct completed value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.completed).to.eql(task.completed);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct number of comments\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.length).to.eql(task.comments.length);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct comments.name value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.name).to.eql(task.comments.name);",
+									"});",
+									"",
+									"pm.test(\"Patched Task has correct comments.comment value\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.comments.comment).to.eql(task.comments.comment);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"completed\": true\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task `completed`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task with invalid data type for `completed`",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "40f6de4e-ed8c-4156-bd42-ae34622ececb",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "35d24b67-2e4b-47f5-bdb2-15c9f879b4d6",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"completed\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"completed\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task with invalid data type for `completed`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task `comments`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aceadc5f-fc2d-48ac-8119-c825b2edfbfb",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"       {",
+									"           \"errors\": {",
+									"               \"comments\": \"comments cannot be updated by this operation, try adding or deleting comments\"",
+									"           }",
+									"       }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"comments\": [\n\t\t\t{\n\t\t\t\t\"name\": \"Zubair\",\n\t\t\t\t\"comment\": \"This is it\"\n\t\t\t}\n\t\t]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task `comments`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task with empty body",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "24c5ed13-cb70-4bf8-81c9-bb5f84a73734",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify({",
+									"}));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "72ae97cd-816e-4775-9e82-57ecae01c54f",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body contains error message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors.task).to.eql(\"task object not defined\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}"
+							]
+						},
+						"description": "Patch Task with empty body"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Task with invalid `taskId`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eabceb7f-20f7-4517-8a93-bffed4064464",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task\"));",
+									"",
+									"pm.test(\"Successful Bad request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify({",
+									"    \"errors\": {",
+									"        \"id\": \"Argument passed in must be a single String of 12 bytes or a string of 24 hex characters\"",
+									"    }",
+									"}));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d467e702-d4d3-42ac-8289-c6570717f17b",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify(",
+									"    {",
+									"        \"title\": \"Make lab modified\",",
+									"        \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified\",",
+									"        \"hoursEstimated\": 3,",
+									"        \"completed\": false,",
+									"        \"comments\": [",
+									"            {",
+									"                \"name\": \"Phil Baressi\",",
+									"                \"comment\": \"Considering lab about dinosaurs modified\"",
+									"                }",
+									"            ]",
+									"    }",
+									"));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/XXXX",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"XXXX"
+							]
+						},
+						"description": "Patch Task with invalid `taskId`"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch non-existent Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc3d4083-e5cc-442a-bba1-902313e86302",
+								"exec": [
+									"var task = JSON.parse(pm.globals.get(\"task\"));",
+									"",
+									"pm.test(\"Successful Not Found request\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"id\": \"task with id fedcba987654321001234567 doesn't exists\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4802afeb-0c8a-429a-bfa0-9e87cf5569de",
+								"exec": [
+									"pm.globals.set(\"task\", JSON.stringify(",
+									"    {",
+									"        \"title\": \"Make lab modified\",",
+									"        \"description\": \"Make the first lab for CS-554. Maybe talk about dinosaurs in it, or something modified\",",
+									"        \"hoursEstimated\": 3,",
+									"        \"completed\": false,",
+									"        \"comments\": [",
+									"            {",
+									"                \"name\": \"Phil Baressi\",",
+									"                \"comment\": \"Considering lab about dinosaurs modified\"",
+									"                }",
+									"            ]",
+									"    }",
+									"));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{task}}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/fedcba987654321001234567",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"fedcba987654321001234567"
+							]
+						},
+						"description": "Patch non-existent Task"
+					},
+					"response": []
+				}
+			],
+			"description": "PATCH /api/tasks/:id",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "POST /api/tasks/:id/comments",
+			"item": [
+				{
+					"name": "Add Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba1d5d2b-97b7-4ca0-a448-029e336693c4",
+								"exec": [
+									"var addedComment = pm.response.json().comments[pm.response.json().comments.length - 1]",
+									"",
+									"pm.globals.set(\"commentId\", addedComment._id);",
+									"",
+									"var comment = {",
+									"\t\"name\": \"AAK\",",
+									"\t\"comment\": \"What's this going on\"",
+									"}",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Created Comment has correct name value\", function () {",
+									"    pm.expect(addedComment.name).to.eql(comment.name);",
+									"});",
+									"",
+									"pm.test(\"Created Comment has correct name value\", function () {",
+									"    pm.expect(addedComment.comment).to.eql(comment.comment);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"AAK\",\n\t\"comment\": \"What's this going on\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}",
+								"comments"
+							]
+						},
+						"description": "Add Comment to Task"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment without `name`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0498dea8-3a5d-4713-aba3-2e8873a18919",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"name\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"comment\": \"What's this going on\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}",
+								"comments"
+							]
+						},
+						"description": "Add Comment without `name`"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment with invalid data type for `name`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "32eabb17-2b84-409f-be9e-0fe5baee0d4f",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"name\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": 1,\n\t\"comment\": \"What's this going on\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}",
+								"comments"
+							]
+						},
+						"description": "Add Comment with invalid data type for `name`"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment without `comment`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "effc96d6-2ce9-4fef-9848-17e5e46db9bb",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"comment\": \"missing property\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"AAK\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}",
+								"comments"
+							]
+						},
+						"description": "Add Comment without `comment`"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment with invalid data type for`comment`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3bb59725-a9ef-4c29-acc1-39cc1e5f84ad",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"comment\": \"invalid type\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"AAK\",\n\t\"comment\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}",
+								"comments"
+							]
+						},
+						"description": "Add Comment with invalid data type for`comment`"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment with invalid `taskId`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec571555-3be8-4b59-906a-a32a7b71e0a3",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"        \"errors\":{",
+									"            \"id\":\"Argument passed in must be a single String of 12 bytes or a string of 24 hex characters\"",
+									"        }",
+									"    }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"AAK\",\n\t\"comment\": \"What's this going on\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/XXXX/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"XXXX",
+								"comments"
+							]
+						},
+						"description": "Add Comment with invalid `taskId`"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment for non-existent Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "45d760b5-a80e-4fa9-ab1e-30ed9a43d54c",
+								"exec": [
+									"pm.test(\"Successful Not Found Request\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"id\": \"task with id fedcba987654321001234567 doesn't exists\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"AAK\",\n\t\"comment\": \"What's this going on\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/fedcba987654321001234567/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"fedcba987654321001234567",
+								"comments"
+							]
+						},
+						"description": "Add Comment for non-existent Task"
+					},
+					"response": []
+				}
+			],
+			"description": "POST /api/tasks/:id/comments",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "DELETE /api/tasks/:taskId/:commentId\t",
+			"item": [
+				{
+					"name": "Delete Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dc5a3daa-d96f-4a18-bf73-3e61e52e2332",
+								"exec": [
+									"pm.test(\"Successfuly Deleted Comment\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}/{{commentId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}",
+								"{{commentId}}"
+							]
+						},
+						"description": "Delete Comment from Task"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment with invalid  `commentId`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "81d02da7-ce3d-4e5b-9e72-0d49351d9023",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"commentId\": \"Invalid UUID.\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}/XXXX",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}",
+								"XXXX"
+							]
+						},
+						"description": "Delete Comment with invalid  `commentId`"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete non-existent Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "62b452b7-2985-460b-9c1c-fa1fe264977a",
+								"exec": [
+									"pm.test(\"Successful Not Found Request\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"error\": \"comment with _id fedcba987654321001234567 doesn't exist\",",
+									"            \"commentId\": \"fedcba987654321001234567\",",
+									"            \"errors\": {}",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/{{taskId}}/fedcba987654321001234567",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"{{taskId}}",
+								"fedcba987654321001234567"
+							]
+						},
+						"description": "Delete non-existent Comment"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment with invalid `taskId`",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea53d50f-14fa-4384-8113-3678b6a8ff56",
+								"exec": [
+									"pm.test(\"Successful Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"       {",
+									"        \"errors\":{",
+									"            \"id\":\"Argument passed in must be a single String of 12 bytes or a string of 24 hex characters\"",
+									"        }",
+									"    }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/XXXX/{{commentId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"XXXX",
+								"{{commentId}}"
+							]
+						},
+						"description": "Delete Comment with invalid `taskId`"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment for non-existent Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b7a1b609-c873-4fbf-8050-e5caa6b2c16d",
+								"exec": [
+									"pm.test(\"Successful Not Found Request\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Body is correct\", function () {",
+									"    pm.response.to.have.body(JSON.stringify(",
+									"        {",
+									"            \"errors\": {",
+									"                \"id\": \"task with id fedcba987654321001234567 doesn't exists\"",
+									"            }",
+									"        }",
+									"    ));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/tasks/fedcba987654321001234567/{{commentId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tasks",
+								"fedcba987654321001234567",
+								"{{commentId}}"
+							]
+						},
+						"description": "Delete Comment for non-existent Task"
+					},
+					"response": []
+				}
+			],
+			"description": "DELETE /api/tasks/:taskId/:commentId\t",
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

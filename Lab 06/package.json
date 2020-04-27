@@ -1,0 +1,32 @@
+{
+  "name": "lab-06",
+  "version": "1.0.0",
+  "description": "cs-554-lab-06",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./dist/server.js & newman run CS-554-Lab-06.postman_collection.json",
+    "build": "tsc",
+    "dev": "ts-node ./src/server.ts",
+    "start": "node ./dist/server.js",
+    "prod": "npm run build && npm run start",
+    "watch": "nodemon --exec ts-node -- ./src/server.ts"
+  },
+  "author": "Zubair Shaikh 10444383",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.6",
+    "uuid-mongodb": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/http-errors": "^1.6.3",
+    "@types/mongodb": "^3.5.14",
+    "@types/node": "^13.13.4",
+    "@types/uuid": "^7.0.3",
+    "newman": "^5.0.0",
+    "ts-node": "^8.9.1",
+    "typescript": "^3.8.3"
+  }
+}
