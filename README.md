@@ -1,4 +1,4 @@
-# CS554
+# [CS554](https://github.com/compmonk/CS554)
 
 ### [Lab 01 : Reviewing API Development](https://github.com/compmonk/CS554/tree/master/Lab%2001)
 
